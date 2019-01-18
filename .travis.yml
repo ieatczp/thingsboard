@@ -10,3 +10,20 @@ sudo: required
 services:
   - docker
 script: mvn clean verify -Ddockerfile.skip=false -DblackBoxTests.skip=false -DblackBoxTests.skipTailChildContainers=true
+after_script:
+  - git init
+  - git config user.name "${U_NAME}"
+  - git config user.email "${U_EMAIL}"
+  - git add .
+  - git commit -m "Travis CI build gitHub project."
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:${P_BRANCH}
+# E: Build LifeCycle
+
+#指定分支，只有指定的分支提交时才会运行脚本
+branches:
+  only:
+    - master
+env:
+ global:
+   # 我将其添加到了travis-ci的环境变量中
+   #- GH_REF: https://github.com/ieatczp/pepper.git
